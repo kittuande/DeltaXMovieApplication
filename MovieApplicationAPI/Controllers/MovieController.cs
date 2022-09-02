@@ -11,7 +11,7 @@ namespace MovieApplicationAPI.Controllers
     public class MovieController : ControllerBase
     {
         
-        IMovieData _movieData;
+        private readonly IMovieData _movieData;
         public MovieController(IMovieData movieData)
         {
             _movieData = movieData;
