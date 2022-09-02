@@ -49,7 +49,7 @@ namespace MovieApplicationAPI.Controllers
         public IActionResult DeleteMovie(int id)
         {
             _movieData.DeleteMovieDetails(id);           
-            return Ok();
+            return Ok("Movie Deleted");
         }
     }
 }
