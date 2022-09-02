@@ -1,6 +1,6 @@
 # DeltaXMovieApplication
 This Web API was built using .NET 6 for DeltaX Assessment. 
-I used EF core to establish for Object-Relation mapping.
+I used EF core for Object-Relation mapping.
 I created a MovieDetails class with all properties required for API.
 MockMovieData contains all the methods that provide data to controller.
 The Endpoints used to call API
@@ -23,7 +23,7 @@ The Endpoints used to call API
         "movieName": "Spider-Man: Homecoming",
         "movieDescription": "Peter Parker balances his life as an ordinary high school student in Queens with his superhero alter-ego Spider-Man, and finds himself on the trail of a new menace prowling the skies of New York City.",
         "releasedDate": "2017-07-07T00:00:00",
-        "producerName": "Marvel Studios",
+        "producerName": "Marvel Studios", 
         "actors": [
             "Robert Downey Jr",
             "Tom Holland",
