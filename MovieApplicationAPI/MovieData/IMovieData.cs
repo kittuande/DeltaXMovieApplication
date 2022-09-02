@@ -6,9 +6,9 @@ namespace MovieApplicationAPI.MovieData
     {
         List<MovieDetails> FetchMovieDetails();
 
-        MovieDetails AddMovieDetails(MovieDetails movieDetails);    
+        Boolean AddMovieDetails(MovieDetails movieDetails);    
 
-        void UpdateMovieDetails(MovieDetails movieDetails,int id);
+        Boolean UpdateMovieDetails(MovieDetails movieDetails);
         void DeleteMovieDetails(int id);
     }
 }

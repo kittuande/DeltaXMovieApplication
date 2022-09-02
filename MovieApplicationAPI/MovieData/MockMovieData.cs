@@ -5,56 +5,13 @@ namespace MovieApplicationAPI.MovieData
 {
     public class MockMovieData: IMovieData
     {
+        //Declaring EF context class 
         private DeltaXMovieApplicationContext deltaXMovieApplicationContext;
         public MockMovieData(DeltaXMovieApplicationContext deltaXMovieApplicationContext)
         {
             this.deltaXMovieApplicationContext = deltaXMovieApplicationContext;
         }
-
-        public MovieDetails AddMovieDetails(MovieDetails movieDetails)
-        {
-            Producer? producer = FindProducer(movieDetails.ProducerName);
-            if (producer == null)
-            {
-                producer = new Producer()
-                {
-                    ProducerName = movieDetails.ProducerName
-                };
-                deltaXMovieApplicationContext.Producers.Add(producer);
-                deltaXMovieApplicationContext.SaveChanges();
-            }           
-            int producerId = producer.ProducerId;
-            Movie movie = new Movie()
-            {
-                MovieName = movieDetails.MovieName,
-                DateOfRelease = movieDetails.ReleasedDate,
-                Description = movieDetails.MovieDescription,
-                ProducerId = producerId,
-
-            };
-            deltaXMovieApplicationContext.Movies.Add(movie);
-            deltaXMovieApplicationContext.SaveChanges();
-            foreach (var _actor in movieDetails.Actors)
-            {
-                Actor? actor=FindActor(_actor);
-                if (actor == null)
-                {
-                    actor = new Actor() { ActorName = _actor };
-                    deltaXMovieApplicationContext.Actors.Add(actor);
-                    deltaXMovieApplicationContext.SaveChanges();
-                }
-                MapMovieActor(movie.MovieId, actor.ActorId);
-                //MovieActorRelationship movieActorRelationship = new MovieActorRelationship()
-                //{
-                //    MovieId=movie.MovieId,
-                //    ActorId = actor.ActorId,
-                //};
-                //deltaXMovieApplicationContext.MovieActorRelationships.Add(movieActorRelationship);
-                //deltaXMovieApplicationContext.SaveChanges();
-            }
-            return movieDetails;
-        }
-
+        //Method to get all moviedetails from database
         public List<MovieDetails> FetchMovieDetails()
         {
             List<Movie> movies = deltaXMovieApplicationContext.Movies.ToList();
@@ -70,26 +27,66 @@ namespace MovieApplicationAPI.MovieData
                 List<String> actorsList = new List<String>();
                 foreach (var i in movieActorRelationship)
                 {
-
                     if (i.MovieId == movie.MovieId)
                     {
-                        
-                        int actorid= i.ActorId;
+                        int actorid = i.ActorId;
                         String? actorName = deltaXMovieApplicationContext.Actors.Find(actorid).ActorName;
                         actorsList.Add(actorName);
                     }
-
                 }
                 m.Actors = actorsList;
                 moviesDetails.Add(m);
-
             }
             return moviesDetails;
         }
-
-        public void UpdateMovieDetails(MovieDetails movieDetails,int id)
+        //Method to add new movie to database by taking moviedetails as input
+        public Boolean AddMovieDetails(MovieDetails movieDetails)
         {
-            Movie? movie = deltaXMovieApplicationContext.Movies.Find(id);
+            Movie? movie = FindMovie(movieDetails.MovieName);
+            if (movie == null)
+            {
+                Producer? producer = FindProducer(movieDetails.ProducerName);
+                if (producer == null)
+                {
+                    producer = new Producer()
+                    {
+                        ProducerName = movieDetails.ProducerName
+                    };
+                    deltaXMovieApplicationContext.Producers.Add(producer);
+                    deltaXMovieApplicationContext.SaveChanges();
+                }
+                int producerId = producer.ProducerId;
+                movie = new Movie()
+                {
+                    MovieName = movieDetails.MovieName,
+                    DateOfRelease = movieDetails.ReleasedDate,
+                    Description = movieDetails.MovieDescription,
+                    ProducerId = producerId,
+
+                };
+                deltaXMovieApplicationContext.Movies.Add(movie);
+                deltaXMovieApplicationContext.SaveChanges();
+                foreach (var _actor in movieDetails.Actors)
+                {
+                    Actor? actor = FindActor(_actor);
+                    if (actor == null)
+                    {
+                        actor = new Actor() { ActorName = _actor };
+                        deltaXMovieApplicationContext.Actors.Add(actor);
+                        deltaXMovieApplicationContext.SaveChanges();
+                    }
+                    MapMovieActor(movie.MovieId, actor.ActorId);
+                }
+                return true;
+            }
+            return false;
+        }
+
+        
+        //Method to update movie details in database by taking movie details as input
+        public Boolean UpdateMovieDetails(MovieDetails movieDetails)
+        {
+            Movie? movie = FindMovie(movieDetails.MovieName);
             if(movie != null)
             {
                 movie.MovieName=movieDetails.MovieName; 
@@ -122,9 +119,12 @@ namespace MovieApplicationAPI.MovieData
                     }
                     MapMovieActor(movie.MovieId, actor.ActorId);
                 }
+                return true;
             }
+            return false;
         }
 
+        //Delete movie details from database using movie id
         public void DeleteMovieDetails(int id)
         {
             Movie? movie = deltaXMovieApplicationContext.Movies.Find(id);
@@ -141,17 +141,11 @@ namespace MovieApplicationAPI.MovieData
             }
 
         }
-        public Producer? FindProducer(String name)
+
+        //Updates replationship between movie and actors. Accepts movieId and actorId as inputs.
+        private void MapMovieActor(int movieId, int actorId)
         {
-            return deltaXMovieApplicationContext.Producers.Where(p => p.ProducerName.Equals(name)).FirstOrDefault();
-        }
-        public Actor? FindActor(String name)
-        {
-            return deltaXMovieApplicationContext.Actors.Where(p => p.ActorName.Equals(name)).FirstOrDefault();
-        }
-        private void MapMovieActor(int movieId,int actorId)
-        {
-           var movieActorRelationship= deltaXMovieApplicationContext.MovieActorRelationships.Where(p => p.MovieId.Equals(movieId)&&p.ActorId.Equals(actorId)).FirstOrDefault();
+            var movieActorRelationship = deltaXMovieApplicationContext.MovieActorRelationships.Where(p => p.MovieId.Equals(movieId) && p.ActorId.Equals(actorId)).FirstOrDefault();
             if (movieActorRelationship == null)
             {
                 movieActorRelationship = new MovieActorRelationship() { MovieId = movieId, ActorId = actorId };
@@ -160,6 +154,40 @@ namespace MovieApplicationAPI.MovieData
             }
         }
 
-        
+        //Finds producer by comparing string
+        public Producer? FindProducer(String producerName)
+        {
+            return deltaXMovieApplicationContext.Producers.Where(p => p.ProducerName.Equals(producerName)).FirstOrDefault();
+        }
+        //Finds actor by comparing string
+        public Actor? FindActor(String actorName)
+        {
+            return deltaXMovieApplicationContext.Actors.Where(p => p.ActorName.Equals(actorName)).FirstOrDefault();
+        }
+        //Finds movie by comparing string
+        public Movie? FindMovie(String movieName)
+        {
+            return deltaXMovieApplicationContext.Movies.Where(p => p.MovieName.Equals(movieName)).FirstOrDefault();
+        }
+        //Returns all actornames
+        public List<String> GetAllActors()
+        {
+            List<String> actors = new List<String>();
+            foreach (var actor in deltaXMovieApplicationContext.Actors)
+            {
+                actors.Add(actor.ActorName);
+            }
+            return actors;
+        }
+        //Returns all producernames
+        public List<String> GetAllProducers()
+        {
+            List<String> producers = new List<String>();
+            foreach (var producer in deltaXMovieApplicationContext.Producers)
+            {
+                producers.Add(producer.ProducerName);
+            }
+            return producers;
+        }       
     }
 }

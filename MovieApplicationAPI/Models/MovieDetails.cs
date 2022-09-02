@@ -1,5 +1,6 @@
 ﻿namespace MovieApplicationAPI.Models
 {
+    //A custom movie model class which has all required details
     public class MovieDetails
     {
         public String MovieName { get; set; }
