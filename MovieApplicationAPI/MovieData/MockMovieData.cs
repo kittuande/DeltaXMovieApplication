@@ -94,7 +94,6 @@ namespace MovieApplicationAPI.MovieData
             {
                 movie.MovieName=movieDetails.MovieName; 
                 movie.Description = movieDetails.MovieDescription;
-                //d/*eltaXMovieApplicationContext.SaveChanges();*/
                 movie.DateOfRelease = movieDetails.ReleasedDate;
                 deltaXMovieApplicationContext.SaveChanges();
                 Producer? producer = FindProducer(movieDetails.ProducerName);
@@ -106,6 +105,12 @@ namespace MovieApplicationAPI.MovieData
                 }
                 movie.ProducerId = producer.ProducerId;
                 deltaXMovieApplicationContext.SaveChanges();
+                List<MovieActorRelationship> removeRelationship = deltaXMovieApplicationContext.MovieActorRelationships.Where(a => a.MovieId == movie.MovieId).ToList();
+                foreach (var relationship in removeRelationship)
+                {
+                    deltaXMovieApplicationContext.MovieActorRelationships.Remove(relationship);
+                    deltaXMovieApplicationContext.SaveChanges();
+                }
                 foreach (var _actorName in movieDetails.Actors)
                 {
                     Actor? actor = FindActor(_actorName);
@@ -118,8 +123,22 @@ namespace MovieApplicationAPI.MovieData
                     MapMovieActor(movie.MovieId, actor.ActorId);
                 }
             }
-           
+        }
 
+        public void DeleteMovieDetails(int id)
+        {
+            Movie? movie = deltaXMovieApplicationContext.Movies.Find(id);
+            if (movie != null)
+            {
+                List<MovieActorRelationship> removeRelationship = deltaXMovieApplicationContext.MovieActorRelationships.Where(a => a.MovieId == movie.MovieId).ToList();
+                foreach (var relationship in removeRelationship)
+                {
+                    deltaXMovieApplicationContext.MovieActorRelationships.Remove(relationship);
+                    deltaXMovieApplicationContext.SaveChanges();
+                }
+                deltaXMovieApplicationContext.Remove(movie);
+                deltaXMovieApplicationContext.SaveChanges();
+            }
 
         }
         public Producer? FindProducer(String name)
@@ -141,5 +160,6 @@ namespace MovieApplicationAPI.MovieData
             }
         }
 
+        
     }
 }

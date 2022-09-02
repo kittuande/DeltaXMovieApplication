@@ -9,5 +9,6 @@ namespace MovieApplicationAPI.MovieData
         MovieDetails AddMovieDetails(MovieDetails movieDetails);    
 
         void UpdateMovieDetails(MovieDetails movieDetails,int id);
+        void DeleteMovieDetails(int id);
     }
 }

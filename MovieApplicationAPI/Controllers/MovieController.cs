@@ -35,5 +35,12 @@ namespace MovieApplicationAPI.Controllers
             return Ok(movieDetails);
 
         }
+        [Route("[Action]/{id}")]
+        [HttpDelete]
+        public IActionResult DeleteMovie(int id)
+        {
+            _movieData.DeleteMovieDetails(id);
+            return Ok();
+        }
     }
 }
