@@ -13,12 +13,16 @@ namespace MovieApplicationAPI.MovieData
 
         public MovieDetails AddMovieDetails(MovieDetails movieDetails)
         {
-            Producer producer = new Producer()
+            Producer? producer = FindProducer(movieDetails.ProducerName);
+            if (producer == null)
             {
-                ProducerName = movieDetails.ProducerName
-            };
-            deltaXMovieApplicationContext.Producers.Add(producer);
-            deltaXMovieApplicationContext.SaveChanges();
+                producer = new Producer()
+                {
+                    ProducerName = movieDetails.ProducerName
+                };
+                deltaXMovieApplicationContext.Producers.Add(producer);
+                deltaXMovieApplicationContext.SaveChanges();
+            }           
             int producerId = producer.ProducerId;
             Movie movie = new Movie()
             {
@@ -32,16 +36,21 @@ namespace MovieApplicationAPI.MovieData
             deltaXMovieApplicationContext.SaveChanges();
             foreach (var _actor in movieDetails.Actors)
             {
-                Actor actor = new Actor() { ActorName = _actor };
-                deltaXMovieApplicationContext.Actors.Add(actor);
-                deltaXMovieApplicationContext.SaveChanges();
-                MovieActorRelationship movieActorRelationship = new MovieActorRelationship()
+                Actor? actor=FindActor(_actor);
+                if (actor == null)
                 {
-                    MovieId=movie.MovieId,
-                    ActorId = actor.ActorId,
-                };
-                deltaXMovieApplicationContext.MovieActorRelationships.Add(movieActorRelationship);
-                deltaXMovieApplicationContext.SaveChanges();
+                    actor = new Actor() { ActorName = _actor };
+                    deltaXMovieApplicationContext.Actors.Add(actor);
+                    deltaXMovieApplicationContext.SaveChanges();
+                }
+                MapMovieActor(movie.MovieId, actor.ActorId);
+                //MovieActorRelationship movieActorRelationship = new MovieActorRelationship()
+                //{
+                //    MovieId=movie.MovieId,
+                //    ActorId = actor.ActorId,
+                //};
+                //deltaXMovieApplicationContext.MovieActorRelationships.Add(movieActorRelationship);
+                //deltaXMovieApplicationContext.SaveChanges();
             }
             return movieDetails;
         }
@@ -66,7 +75,7 @@ namespace MovieApplicationAPI.MovieData
                     {
                         
                         int actorid= i.ActorId;
-                        String actorName = deltaXMovieApplicationContext.Actors.Find(actorid).ActorName;
+                        String? actorName = deltaXMovieApplicationContext.Actors.Find(actorid).ActorName;
                         actorsList.Add(actorName);
                     }
 
@@ -77,5 +86,60 @@ namespace MovieApplicationAPI.MovieData
             }
             return moviesDetails;
         }
+
+        public void UpdateMovieDetails(MovieDetails movieDetails,int id)
+        {
+            Movie? movie = deltaXMovieApplicationContext.Movies.Find(id);
+            if(movie != null)
+            {
+                movie.MovieName=movieDetails.MovieName; 
+                movie.Description = movieDetails.MovieDescription;
+                //d/*eltaXMovieApplicationContext.SaveChanges();*/
+                movie.DateOfRelease = movieDetails.ReleasedDate;
+                deltaXMovieApplicationContext.SaveChanges();
+                Producer? producer = FindProducer(movieDetails.ProducerName);
+                if (producer == null)               
+                {
+                    producer = new Producer() { ProducerName = movieDetails.ProducerName };
+                    deltaXMovieApplicationContext.Producers.Add(producer);
+                    deltaXMovieApplicationContext.SaveChanges();                   
+                }
+                movie.ProducerId = producer.ProducerId;
+                deltaXMovieApplicationContext.SaveChanges();
+                foreach (var _actorName in movieDetails.Actors)
+                {
+                    Actor? actor = FindActor(_actorName);
+                    if(actor == null)
+                    {
+                        actor = new Actor() { ActorName = _actorName };
+                        deltaXMovieApplicationContext.Actors.Add(actor);
+                        deltaXMovieApplicationContext.SaveChanges();                       
+                    }
+                    MapMovieActor(movie.MovieId, actor.ActorId);
+                }
+            }
+           
+
+
+        }
+        public Producer? FindProducer(String name)
+        {
+            return deltaXMovieApplicationContext.Producers.Where(p => p.ProducerName.Equals(name)).FirstOrDefault();
+        }
+        public Actor? FindActor(String name)
+        {
+            return deltaXMovieApplicationContext.Actors.Where(p => p.ActorName.Equals(name)).FirstOrDefault();
+        }
+        private void MapMovieActor(int movieId,int actorId)
+        {
+           var movieActorRelationship= deltaXMovieApplicationContext.MovieActorRelationships.Where(p => p.MovieId.Equals(movieId)&&p.ActorId.Equals(actorId)).FirstOrDefault();
+            if (movieActorRelationship == null)
+            {
+                movieActorRelationship = new MovieActorRelationship() { MovieId = movieId, ActorId = actorId };
+                deltaXMovieApplicationContext.MovieActorRelationships.Add(movieActorRelationship);
+                deltaXMovieApplicationContext.SaveChanges();
+            }
+        }
+
     }
 }

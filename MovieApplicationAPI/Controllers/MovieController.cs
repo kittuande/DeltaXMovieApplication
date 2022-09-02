@@ -27,6 +27,13 @@ namespace MovieApplicationAPI.Controllers
             _movieData.AddMovieDetails(movieDetails);
             return Ok(movieDetails);
         }
+        [Route("[Action]/{id}")]
+        [HttpPut]
+        public IActionResult EditMovieDetails(MovieDetails movieDetails,int id)
+        {
+            _movieData.UpdateMovieDetails(movieDetails,id);
+            return Ok(movieDetails);
 
+        }
     }
 }
