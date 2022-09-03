@@ -1,8 +1,9 @@
 # DeltaXMovieApplication
 
-This ASP.NET core Web API was built using .NET 6 for DeltaX Assessment. 
-EF core 6 Database-First approach was used for Object-Relation mapping. Database script file "MovieApplicationDB.sql" was uploaded to the repository.
-The database consists of 4 tables(Movie,Actor,Producer,MovieActotRelationship).The **MovieDetails** class in the project contains all the required properties for the API. **MockMovieData** class contains all the methods that provide data to controller.
+This ASP.NET core Web API was built using .NET 6 for DeltaX Assessment.</br>
+EF core 6 Database-First approach was used for Object-Relation mapping. Database script file "MovieApplicationDB.sql" was uploaded to the repository.</br>
+The database consists of 4 tables(Movie,Actor,Producer,MovieActotRelationship).</br>
+The **MovieDetails** class in the project contains all the required properties for the API. **MockMovieData** class contains all the methods that provide data to controller.
 The application has following APIs:
 
 ### 1. AddNewMovie: 
