@@ -1,14 +1,14 @@
 # DeltaXMovieApplication
 
 This ASP.NET core Web API was built using .NET 6 for DeltaX Assessment. 
-EF core Database-First approach was used for Object-Relation mapping. Database script file "MovieApplicationDB.sql" was uploaded to the repository.
+EF core 6 Database-First approach was used for Object-Relation mapping. Database script file "MovieApplicationDB.sql" was uploaded to the repository.
 The database consists of 4 tables(Movie,Actor,Producer,MovieActotRelationship).The **MovieDetails** class in the project contains all the required properties for the API. **MockMovieData** class contains all the methods that provide data to controller.
 The application has following APIs:
 
 ### 1. AddNewMovie: 
 This endpoint takes movie details as input and if the movie already exists it will return Bad Request else it will add new movie details to the database.
 - ***HttpMethod:*** POST
-- ***Endpoint:*** <Host>/api/Movie/AddMovieDetails(Eg: https://localhost:7143/api/Movie/AddMovieDetails)
+- ***Endpoint:*** \<Host>/api/Movie/AddMovieDetails(Eg: https://localhost:7143/api/Movie/AddMovieDetails)
               
 Sample1:
 ```
@@ -63,7 +63,7 @@ Response Body: Movie with this name already exists
 ### 2. UpdateMovieDetails: 
 This endpoint takes movie name and movie details as input and if the movie name exists in the database we can edit it's details. If the movie does not exist in the database, we can't edit movie.
 - ***HttpMethod:*** PUT
-- ***Endpoint:*** <Host>/api/Movie/EditMovieDetails/{movieName} (Eg: https://localhost:7143/api/Movie/EditMovieDetails/Iron%20Man)
+- ***Endpoint:*** \<Host>/api/Movie/EditMovieDetails/{movieName} (Eg: https://localhost:7143/api/Movie/EditMovieDetails/Iron%20Man)
 
 Sample1: 
 Iron Man movie exists in the database. In this request, we updated the movie description and removed one actor.
@@ -96,7 +96,7 @@ Response Body:
 }
 ```
 Sample2: 
-Passing steelman as movieName in URI. As steel man name does not exist in the database it will give Bad Request.
+Passing Steel Man as MovieName in URI. As steel man name does not exist in the database it will give Bad Request.
 ```
 Input : https://localhost:7143/api/Movie/EditMovieDetails/steel%20man
 {
@@ -117,7 +117,7 @@ Response Body: Movie with this name does not exist
 ### 3. FetchMovieDetails: 
 This endpoint returns all movie details from the database as a list.
 - ***HttpMethod:*** GET
-- ***Endpoint:*** <Host>/api/Movie/GetMovies(Eg: https://localhost:7143/api/Movie/GetMovies)
+- ***Endpoint:*** \<Host>/api/Movie/GetMovies(Eg: https://localhost:7143/api/Movie/GetMovies)
 
 Sample1:
 ```
@@ -185,7 +185,7 @@ Response Body:
 ### 4. GetActorNames: 
 Gets all the actor names from the database as a list. Can be used in add/edit movie to choose actors from dropdown list.
 - ***HttpMethod:*** GET
-- ***Endpoint:*** <Host>/api/Movie/GetActors(Eg: https://localhost:7143/api/Movie/GetActors)
+- ***Endpoint:*** \<Host>/api/Movie/GetActors(Eg: https://localhost:7143/api/Movie/GetActors)
 
 Sample:
 ```
@@ -207,7 +207,7 @@ Response Body :
 ### 5. GetProducerNames:
 Gets all the producer names from the database as a list. Can be used in add/edit movie to choose producers from dropdown list.
 - ***HttpMethod:*** GET
-- ***Endpoint:*** <Host>/api/Movie/GetProducers(Eg: https://localhost:7143/api/Movie/GetProducers)
+- ***Endpoint:*** \<Host>/api/Movie/GetProducers(Eg: https://localhost:7143/api/Movie/GetProducers)
 
 Sample:
 ```
@@ -222,7 +222,7 @@ Response Body:
 ### 6. DeleteMovie:
 Used to delete movie based on movie name from database.
 - ***HttpMethod:*** DELETE
-- ***Endpoint:*** <Host>/api/Movie/DeleteMovie/{movieName}(Eg: https://localhost:7143/api/Movie/DeleteMovie/The%20Dark%20Knight)
+- ***Endpoint:*** \<Host>/api/Movie/DeleteMovie/{movieName}(Eg: https://localhost:7143/api/Movie/DeleteMovie/The%20Dark%20Knight)
 
 Sample1:
 ```
