@@ -8,8 +8,8 @@ namespace MovieApplicationAPI.MovieData
         List<MovieDetails> FetchMovieDetails();
         Boolean AddMovieDetails(MovieDetails movieDetails);    
 
-        Boolean UpdateMovieDetails(MovieDetails movieDetails);
-        Boolean DeleteMovieDetails(String moviename);
+        Boolean UpdateMovieDetails(MovieDetails movieDetails,String movieName);
+        Boolean DeleteMovieDetails(String movieName);
         List<String> GetAllActors();
         List<String> GetAllProducers();
     }

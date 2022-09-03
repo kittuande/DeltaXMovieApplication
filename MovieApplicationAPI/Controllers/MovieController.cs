@@ -34,11 +34,11 @@ namespace MovieApplicationAPI.Controllers
             return BadRequest("Movie with this name already exists");
         }
         //method to edit movie details
-        [Route("[Action]")]
+        [Route("[Action]/{movieName}")]
         [HttpPut]
-        public IActionResult EditMovieDetails(MovieDetails movieDetails)
+        public IActionResult EditMovieDetails(MovieDetails movieDetails,String movieName)
         {
-            Boolean flag=_movieData.UpdateMovieDetails(movieDetails);
+            Boolean flag=_movieData.UpdateMovieDetails(movieDetails,movieName);
             if(flag)
                 return Ok(movieDetails);
             return BadRequest("Movie with this name does not exist");

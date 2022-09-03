@@ -84,9 +84,9 @@ namespace MovieApplicationAPI.MovieData
 
         
         //Method to update movie details in database by taking movie details as input
-        public Boolean UpdateMovieDetails(MovieDetails movieDetails)
+        public Boolean UpdateMovieDetails(MovieDetails movieDetails,String movieName)
         {
-            Movie? movie = FindMovie(movieDetails.MovieName);
+            Movie? movie = FindMovie(movieName);
             if(movie != null)
             {
                 movie.MovieName=movieDetails.MovieName; 
