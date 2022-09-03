@@ -131,9 +131,9 @@ namespace MovieApplicationAPI.MovieData
         }
 
         //Delete movie details from database using movie id
-        public void DeleteMovieDetails(int id)
+        public Boolean DeleteMovieDetails(String movieName)
         {
-            Movie? movie = deltaXMovieApplicationContext.Movies.Find(id);
+            Movie? movie = deltaXMovieApplicationContext.Movies.Where(m=>m.MovieName==movieName).FirstOrDefault();
             if (movie != null)
             {
                 List<MovieActorRelationship> removeRelationship = deltaXMovieApplicationContext.MovieActorRelationships.Where(a => a.MovieId == movie.MovieId).ToList();
@@ -144,8 +144,9 @@ namespace MovieApplicationAPI.MovieData
                 }
                 deltaXMovieApplicationContext.Remove(movie);
                 deltaXMovieApplicationContext.SaveChanges();
+                return true;
             }
-
+            return false;
         }
 
         //Updates replationship between movie and actors. Accepts movieId and actorId as inputs.

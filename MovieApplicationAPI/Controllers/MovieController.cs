@@ -44,12 +44,28 @@ namespace MovieApplicationAPI.Controllers
             return BadRequest("Movie with this name does not exist");
         }
         //Method to delete movie permanently
-        [Route("[Action]/{id}")]
+        [Route("[Action]/{movieName}")]
         [HttpDelete]
-        public IActionResult DeleteMovie(int id)
+        public IActionResult DeleteMovie(String movieName)
         {
-            _movieData.DeleteMovieDetails(id);           
-            return Ok("Movie Deleted");
+            Boolean flag= _movieData.DeleteMovieDetails(movieName);  
+            if(flag)
+                return Ok("Movie Deleted");
+            return BadRequest("Moviename does not exist");
+        }
+        //Returns all actornames from database
+        [Route("[Action]")]
+        [HttpGet]
+        public IActionResult GetActors()
+        {
+            return Ok(_movieData.GetAllActors());
+        }
+        //Returns all producernames from database
+        [Route("[Action]")]
+        [HttpGet]
+        public IActionResult GetProducers()
+        {
+            return Ok(_movieData.GetAllProducers());
         }
     }
 }
