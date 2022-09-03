@@ -2,13 +2,15 @@
 
 namespace MovieApplicationAPI.MovieData
 {
+    
     public interface IMovieData
     {
         List<MovieDetails> FetchMovieDetails();
+        Boolean AddMovieDetails(MovieDetails movieDetails);    
 
-        MovieDetails AddMovieDetails(MovieDetails movieDetails);    
-
-        void UpdateMovieDetails(MovieDetails movieDetails,int id);
-        void DeleteMovieDetails(int id);
+        Boolean UpdateMovieDetails(MovieDetails movieDetails);
+        Boolean DeleteMovieDetails(String moviename);
+        List<String> GetAllActors();
+        List<String> GetAllProducers();
     }
 }
