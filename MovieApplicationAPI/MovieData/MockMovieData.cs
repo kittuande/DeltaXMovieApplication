@@ -103,11 +103,7 @@ namespace MovieApplicationAPI.MovieData
                 movie.ProducerId = producer.ProducerId;
                 deltaXMovieApplicationContext.SaveChanges();
                 List<MovieActorRelationship> removeRelationship = deltaXMovieApplicationContext.MovieActorRelationships.Where(a => a.MovieId == movie.MovieId).ToList();
-                foreach (var relationship in removeRelationship)
-                {
-                    deltaXMovieApplicationContext.MovieActorRelationships.Remove(relationship);
-                    deltaXMovieApplicationContext.SaveChanges();
-                }
+                List<Actor> actors = new List<Actor>();
                 foreach (var _actorName in movieDetails.Actors)
                 {
                     Actor? actor = FindActor(_actorName);
@@ -118,6 +114,16 @@ namespace MovieApplicationAPI.MovieData
                         deltaXMovieApplicationContext.SaveChanges();                       
                     }
                     MapMovieActor(movie.MovieId, actor.ActorId);
+                    actors.Add(actor);
+                }
+                foreach (var relationship in removeRelationship)
+                {
+                    var flag = actors.Where(a => a.ActorId == relationship.ActorId).FirstOrDefault();
+                    if (flag == null)
+                    {
+                        deltaXMovieApplicationContext.MovieActorRelationships.Remove(relationship);
+                        deltaXMovieApplicationContext.SaveChanges();
+                    }
                 }
                 return true;
             }
