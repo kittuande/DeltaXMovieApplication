@@ -61,11 +61,11 @@ namespace MovieApplicationAPI.Controllers
             return Ok(_movieData.GetAllActors());
         }
         //Returns all producernames from database
-        [Route("[Action]")]
-        [HttpGet]
-        public IActionResult GetProducers()
-        {
-            return Ok(_movieData.GetAllProducers());
-        }
+        //[Route("[Action]")]
+        //[HttpGet]
+        //public IActionResult GetProducers()
+        //{
+        //    return Ok(_movieData.GetAllProducers());
+        //}
     }
 }
